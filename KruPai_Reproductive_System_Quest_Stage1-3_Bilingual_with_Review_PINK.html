@@ -1,0 +1,930 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Kru Pai Classroom • Reproductive System Quest (Stage Select)</title>
+<style>
+:root{
+  --bg:#ffffff;
+  --ink:#111827;
+  --card:#ffffff;
+  --brand:#2563EB;     /* blue */
+  --accent: #f472b6;    /* orange */
+  --accent2: #db2777;   /* green */
+  --muted:#6B7280;
+  --ok:#16A34A;
+  --bad:#DC2626;
+  --soft:#F8FAFC;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.container{max-width:980px;margin:0 auto;padding:16px}
+.header-top{
+  background:linear-gradient(90deg,var(--brand),#60A5FA);
+  color:#fff;padding:14px 16px;border-bottom:4px solid #dbeafe;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+}
+.brand-left{font-weight:900;letter-spacing:.4px;font-size:20px}
+.pills{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{
+  display:inline-flex;gap:8px;align-items:center;
+  padding:8px 12px;border-radius:999px;
+  background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.25);
+  font-weight:800;color:#fff;
+  backdrop-filter: blur(6px);
+}
+.pill button{
+  border:none;border-radius:999px;
+  padding:6px 10px;font-weight:900;cursor:pointer;
+  background:rgba(255,255,255,.92);color:#111827;
+}
+.pill button.active{background:var(--accent);color:#fff}
+.mainhead{
+  margin:16px 0 10px 0;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap
+}
+.h1{font-size:22px;font-weight:1000;color:var(--accent)}
+.sub{color:var(--muted);font-weight:700;margin-top:4px}
+.badge{
+  display:none;
+  padding:8px 12px;border-radius:999px;
+  background:#eff6ff;border:2px solid #bfdbfe;
+  font-weight:900;color:#1d4ed8;
+  gap:8px;align-items:center;
+}
+.card{
+  background:var(--card);
+  border:2px solid #dbeafe;
+  border-radius:16px;
+  padding:18px;
+  box-shadow:0 10px 22px rgba(37,99,235,.08);
+}
+.row{display:grid;gap:14px}
+@media (min-width:900px){
+  .row{grid-template-columns: 1.1fr .9fr; align-items:start;}
+}
+.input{
+  width:100%;
+  padding:16px;
+  font-size:18px;
+  border-radius:14px;
+  border:2px solid #bfdbfe;
+  text-align:center;
+  font-weight:900;
+  outline:none;
+}
+.input:focus{border-color:var(--brand); box-shadow:0 0 0 4px rgba(37,99,235,.12)}
+.note{color:var(--muted);font-size:14px;text-align:center}
+.btn{
+  padding:12px 18px;border:none;border-radius:999px;
+  font-weight:1000;font-size:16px;cursor:pointer;
+}
+.btn.primary{background:var(--brand);color:#fff}
+.btn.accent{background:var(--accent);color:#fff}
+.btn.secondary{background:#e2e8f0;color:#111827}
+.btn.ghost{background:#fff;border:2px solid #e5e7eb;color:#111827}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.stage-grid{display:grid;gap:12px}
+@media (min-width:700px){ .stage-grid{grid-template-columns:repeat(3,1fr);} }
+.stage{
+  border:2px solid #e5e7eb;border-radius:16px;padding:14px;background:var(--soft);
+}
+.stage h3{margin:0 0 6px 0;font-size:18px;font-weight:1000}
+.stage p{margin:0;color:var(--muted);font-weight:700;font-size:13px;line-height:1.35}
+.stage .tag{display:inline-flex;margin-top:10px;padding:6px 10px;border-radius:999px;font-weight:1000;font-size:12px}
+.tag.ready{background:#ecfdf5;color:#065f46;border:1px solid #bbf7d0}
+.tag.soon{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}
+.progress{font-weight:1000;color:var(--brand);font-size:18px}
+.qbox{
+  border:2px solid #e5e7eb;border-radius:16px;padding:16px;background:#fff;
+}
+.question{
+  font-weight:1000;font-size:20px;line-height:1.45;margin:0 0 12px 0;
+}
+.choices{display:grid;gap:10px}
+.choice{
+  border:2px solid #e5e7eb;border-radius:14px;
+  padding:14px 16px;font-weight:900;font-size:17px;
+  background:#f8fafc;cursor:pointer;text-align:left;
+}
+.choice:hover{border-color:var(--brand)}
+.choice.selected{border-color:var(--accent);background:#fff7ed}
+.choice.correct{border-color:var(--ok);background:#ecfdf5}
+.choice.wrong{border-color:var(--bad);background:#fef2f2}
+.choice.locked{cursor:not-allowed;opacity:.8}
+.choice:disabled{cursor:not-allowed;opacity:.82}
+.jumper{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(44px,1fr));
+  gap:8px;margin-top:12px
+}
+.dot{
+  padding:10px;border-radius:14px;border:2px solid #e5e7eb;background:#fff;
+  font-weight:900;cursor:pointer;position:relative;
+}
+.dot.current{border-color:var(--accent)}
+.dot.done{background:#fff7ed}
+.dot.correct{background:#ecfdf5;border-color:var(--ok)}
+.dot.wrong{background:#fef2f2;border-color:var(--bad)}
+.dot.correct::after{
+  content:"✓😁";
+  position:absolute;right:-10px;top:-10px;font-size:13px;
+}
+.dot.wrong::after{
+  content:"✗😅";
+  position:absolute;right:-10px;top:-10px;font-size:13px;
+}
+.big-emoji{
+  position:fixed;top:42%;left:50%;
+  transform:translate(-50%,-50%) scale(.25);
+  font-size:5.2rem;z-index:9999;pointer-events:none;
+  animation:bigPop .9s ease-out forwards;
+  filter:drop-shadow(0 10px 16px rgba(0,0,0,.18));
+}
+@keyframes bigPop{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.25)}
+  40%{opacity:1;transform:translate(-50%,-50%) scale(1.25)}
+  100%{opacity:0;transform:translate(-50%,-60%) scale(1)}
+}
+.result h2{margin:6px 0 0 0;font-size:26px;font-weight:1000;color:var(--brand)}
+.praise{font-size:20px;font-weight:1000;margin:8px 0 2px 0}
+.history{
+  margin-top:14px;border:2px dashed #cbd5e1;border-radius:16px;
+  padding:14px;background:#f8fafc;
+}
+.hist-table{width:100%;border-collapse:collapse;font-size:14px}
+.hist-table th,.hist-table td{padding:8px;border-bottom:1px solid #e5e7eb;text-align:left}
+.hist-table th{color:#374151;font-weight:1000}
+.footer{margin:18px 0 6px 0;color:var(--muted);font-size:12px;text-align:center}
+.small{font-size:12px;color:var(--muted);font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="header-top">
+  <div class="brand-left">Kru Pai Classroom</div>
+  <div class="pills">
+    <div class="pill" title="Language">
+      🌐
+      <button id="langTH" onclick="setLang('th')">TH</button>
+      <button id="langEN" onclick="setLang('en')">EN</button>
+    </div>
+    <div class="pill badge" id="playerBadge">👤 <span id="badgeLabel">ผู้เล่น</span>: <span id="playerBadgeName"></span></div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="mainhead">
+    <div>
+      <div class="h1" id="title">🌸 เกมพิชิตระบบสืบพันธุ์ (3 ด่าน)</div>
+      <div class="sub" id="subtitle">เลือกด่านก่อนเล่น • ตอบแล้วรู้ทันที • มีประวัติการเล่น</div>
+    </div>
+    <div class="progress" id="progressText"></div>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="screenLogin" class="card">
+    <div class="row">
+      <div>
+        <h2 style="margin:0 0 6px 0;color:var(--brand);font-weight:1000" id="loginTitle">🎒 ลงชื่อเข้าเล่นเกม</h2>
+        <div class="note" id="loginHint">พิมพ์ชื่อเล่น แล้วกดเริ่มเล่นได้เลย</div>
+        <input id="playerNameInput" class="input" type="text" maxlength="24" autocomplete="off" placeholder="เช่น น้องพี / Emma / Aladin" />
+        <button class="btn primary" style="width:100%;font-size:18px" onclick="goStageSelect()">▶️ เริ่มเล่นเกม</button>
+        <div class="note" id="lastPlayHint" style="display:none;margin-top:8px"></div>
+      </div>
+      <div class="card" style="border-color:#fed7aa;background:#fff7ed">
+        <div style="font-weight:1000;color:#9a3412;margin-bottom:8px" id="howTitle">✨ วิธีเล่น</div>
+        <div class="small" id="howText">
+          1) ลงชื่อ → 2) เลือกด่าน → 3) ตอบทีละข้อ<br/>
+          ตอบถูก = 😁🎉 • ตอบผิด = 😅💦
+        </div>
+        <div style="margin-top:10px" class="small">
+          <span style="font-weight:1000" id="tipLabel">ทิป:</span> <span id="tipText">เล่นซ้ำได้ คะแนนจะถูกบันทึกไว้ในประวัติของชื่อนั้น</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE SELECT -->
+  <div id="screenStage" class="card" style="display:none">
+    <h2 style="margin:0 0 10px 0;color:var(--accent);font-weight:1000" id="stageTitle">🗺️ เลือกด่านที่อยากเล่น</h2>
+    <div class="stage-grid">
+      <div class="stage">
+        <h3 id="s1Title">🌸 ด่านที่ 1 • โครงสร้างอวัยวะสืบพันธุ์</h3>
+        <p id="s1Desc">เพศชาย/หญิง • หน้าที่อวัยวะ • เซลล์สืบพันธุ์ (25 ข้อ)</p>
+        <div class="tag ready" id="s1Tag">พร้อมเล่น</div>
+        <div class="controls">
+          <button class="btn accent" onclick="startStage(1)">▶️ <span id="play1">เล่นด่าน 1</span></button>
+        </div>
+      </div>
+
+      <div class="stage">
+        <h3 id="s2Title">🧬 ด่านที่ 2 • วัยแรกรุ่น & รอบเดือน & ฮอร์โมน</h3>
+        <p id="s2Desc">การตกไข่ • การปฏิสนธิ • รก/สายสะดือ (25 ข้อ)</p>
+        <div class="tag ready" id="s2Tag">พร้อมเล่น</div>
+        <div class="controls">
+          <button class="btn accent" onclick="startStage(2)">▶️ <span id="play2">เล่นด่าน 2</span></button>
+        </div>
+      </div>
+
+      <div class="stage">
+        <h3 id="s3Title">🔁 ด่านที่ 3 • ความสัมพันธ์ & สุขภาวะทางเพศ</h3>
+        <p id="s3Desc">การตั้งครรภ์ • การดูแลตนเอง • ความปลอดภัย (15 ข้อ)</p>
+        <div class="tag ready" id="s3Tag">พร้อมเล่น</div>
+        <div class="controls">
+          <button class="btn accent" onclick="startStage(3)">▶️ <span id="play3">เล่นด่าน 3</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls" style="margin-top:14px">
+      <button class="btn ghost" onclick="backToLogin()">↩️ <span id="backLogin">กลับไปหน้าแรก</span></button>
+    </div>
+
+    <div class="history" id="stageHistoryBox" style="display:none">
+      <div style="font-weight:1000;margin-bottom:8px" id="histTitle">📒 ประวัติการเล่น (แยกตามด่าน)</div>
+      <div style="overflow:auto">
+        <table class="hist-table" id="stageHistoryTable"></table>
+      </div>
+      <div class="controls" style="margin-top:12px">
+        <button class="btn secondary" onclick="clearAllMyHistory()">🧹 <span id="clearHist">ล้างประวัติชื่อนี้ทั้งหมด</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME -->
+  <div id="screenGame" class="card" style="display:none">
+    <div class="qbox">
+      <div class="question" id="question"></div>
+      <div class="choices" id="choices"></div>
+      <div class="controls">
+        <button class="btn secondary" onclick="prevQ()">← <span id="btnPrev">ย้อนกลับ</span></button>
+        <button class="btn primary" onclick="nextQ()"><span id="btnNext">ถัดไป</span> →</button>
+        <button class="btn accent" onclick="finish()">🏁 <span id="btnFinish">สรุปคะแนน</span></button>
+        <button class="btn ghost" onclick="exitToStages()">🗺️ <span id="btnExit">กลับไปเลือกด่าน</span></button>
+      </div>
+      <div class="jumper" id="jumper"></div>
+      <div class="small" id="lockNote" style="margin-top:10px">* ตอบผิดแล้ว “ล็อกข้อ” เพื่อกันกดมั่ว (แนว Kru Pai)</div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="screenResult" class="card result" style="display:none">
+    <div id="playerShow" style="font-size:22px;font-weight:1000;color:var(--accent);margin:0 0 6px 0"></div>
+    <div id="praiseText" class="praise"></div>
+    <h2 id="scoreBig"></h2>
+    <p id="summary" style="margin:6px 0 0 0;color:var(--muted);font-weight:900"></p>
+
+    <div class="history" id="historyBox" style="display:none">
+      <div style="font-weight:1000;margin-bottom:8px" id="hist2Title">📒 ประวัติการเล่น (ด่านนี้)</div>
+      <div style="overflow:auto">
+        <table class="hist-table" id="historyTable"></table>
+      </div>
+      <div class="controls" style="margin-top:12px">
+        <button class="btn secondary" onclick="clearMyStageHistory()">🧹 <span id="clearStage">ล้างประวัติด่านนี้</span></button>
+      </div>
+    </div>
+
+    <div class="controls" style="margin-top:14px">
+      <button class="btn primary" onclick="replayStage()">🔁 <span id="replay">เล่นด่านนี้อีกครั้ง</span></button>
+      <button class="btn ghost" onclick="exitToStages()">🗺️ <span id="backStages">กลับไปเลือกด่าน</span></button>
+    </div>
+  </div>
+
+  <div class="footer">© Kru Pai Classroom • Reproductive System Quest • Stage Select • TH/EN</div>
+</div>
+
+<script>
+/* =======================
+   Language UI
+======================= */
+let LANG = localStorage.getItem("kru_lang_digestive") || "th";
+const UI = {
+  th: {
+    title: "🌸 เกมพิชิตระบบสืบพันธุ์ (3 ด่าน)",
+    subtitle: "เลือกด่านก่อนเล่น • ตอบแล้วรู้ทันที • มีหน้าเฉลย/ทบทวน",
+    badgeLabel:"ผู้เล่น",
+    loginTitle:"🎒 ลงชื่อเข้าเล่นเกม",
+    loginHint:"พิมพ์ชื่อเล่น แล้วกดเริ่มเล่นได้เลย",
+    howTitle:"✨ วิธีเล่น",
+    howText:"1) ลงชื่อ → 2) เลือกด่าน → 3) ตอบทีละข้อ<br/>ตอบถูก = 😁🎉 • ตอบผิด = 😅💦",
+    tipLabel:"ทิป:",
+    tipText:"เล่นซ้ำได้ คะแนนจะถูกบันทึกไว้ในประวัติของชื่อนั้น",
+    stageTitle:"🗺️ เลือกด่านที่อยากเล่น",
+    s1Title:"🌸 ด่านที่ 1 • โครงสร้างอวัยวะสืบพันธุ์",
+    s1Desc:"เพศชาย/หญิง • หน้าที่อวัยวะ • เซลล์สืบพันธุ์ (25 ข้อ)",
+    s2Title:"🧬 ด่านที่ 2 • วัยแรกรุ่น & รอบเดือน & ฮอร์โมน",
+    s2Desc:"การตกไข่ • การปฏิสนธิ • รก/สายสะดือ (25 ข้อ)",
+    s3Title:"🔁 ด่านที่ 3 • ความสัมพันธ์ & สุขภาวะทางเพศ",
+    s3Desc:"การตั้งครรภ์ • การดูแลตนเอง • ความปลอดภัย (15 ข้อ)",
+    ready:"พร้อมเล่น",
+    soon:"กำลังเติมคำถาม",
+    play1:"เล่นด่าน 1",
+    play2:"เล่นด่าน 2",
+    play3:"เล่นด่าน 3",
+    backLogin:"กลับไปหน้าแรก",
+    histTitle:"📒 ประวัติการเล่น (แยกตามด่าน)",
+    clearHist:"ล้างประวัติชื่อนี้ทั้งหมด",
+    btnPrev:"ย้อนกลับ",
+    btnNext:"ถัดไป",
+    btnFinish:"สรุปคะแนน",
+    btnExit:"กลับไปเลือกด่าน",
+    lockNote:"* ตอบผิดแล้ว “ล็อกข้อ” เพื่อกันกดมั่ว (แนว Kru Pai)",
+    hist2Title:"📒 ประวัติการเล่น (ด่านนี้)",
+    clearStage:"ล้างประวัติด่านนี้",
+    replay:"เล่นด่านนี้อีกครั้ง",
+    backStages:"กลับไปเลือกด่าน",
+    qLabel:(i,t)=>`ข้อ ${i}/${t}`,
+    score:(s,t)=>`คุณได้ ${s}/${t} คะแนน`,
+    percent:(p)=>`คิดเป็น ${p}%`,
+    playerShow:(name,stage)=>`🏅 ผู้เล่น : ${name} • ด่านที่ ${stage}`,
+    stageName:(n)=> n===1? "ผลลัพธ์ของการย่อยอาหาร" : (n===2? "เอนไซม์ & pH" : "โครงสร้างอวัยวะ"),
+  },
+  en: {
+    title: "🌸 Reproductive System Quest (3 Stages)",
+    subtitle: "Choose a stage • Instant feedback • Play history",
+    badgeLabel:"Player",
+    loginTitle:"🎒 Enter your name",
+    loginHint:"Type a nickname and press Start.",
+    howTitle:"✨ How to play",
+    howText:"1) Enter name → 2) Choose stage → 3) Answer one by one<br/>Correct = 😁🎉 • Wrong = 😅💦",
+    tipLabel:"Tip:",
+    tipText:"Replay anytime — your scores are saved under your name.",
+    stageTitle:"🗺️ Choose a stage",
+    s1Title:"🥪 Stage 1 • Digestion results",
+    s1Desc:"Eat → digest → what you get → where it’s absorbed (30 Qs)",
+    s2Title:"🧬 Stage 2 • Puberty, cycle & hormones",
+    s2Desc:"Digestive enzymes • optimal pH • where juices are made",
+    s3Title:"🫀 Stage 3 • Organ structure",
+    s3Desc:"Salivary glands • stomach • small/large intestine (deeper)",
+    ready:"Ready",
+    soon:"Coming soon",
+    play1:"Play Stage 1",
+    play2:"Play Stage 2",
+    play3:"Play Stage 3",
+    backLogin:"Back to home",
+    histTitle:"📒 Play history (by stage)",
+    clearHist:"Clear all history for this name",
+    btnPrev:"Back",
+    btnNext:"Next",
+    btnFinish:"Finish",
+    btnExit:"Back to stages",
+    lockNote:"* Wrong answers lock the question to prevent random tapping.",
+    hist2Title:"📒 Play history (this stage)",
+    clearStage:"Clear this stage history",
+    replay:"Replay this stage",
+    backStages:"Back to stages",
+    qLabel:(i,t)=>`Q ${i}/${t}`,
+    score:(s,t)=>`You scored ${s}/${t}`,
+    percent:(p)=>`${p}%`,
+    playerShow:(name,stage)=>`🏅 Player: ${name} • Stage ${stage}`,
+    stageName:(n)=> n===1? "Digestion results" : (n===2? "Enzymes & pH" : "Organ structure"),
+  }
+};
+function setLang(l){
+  LANG = l;
+  localStorage.setItem("kru_lang_digestive", LANG);
+  document.getElementById("langTH").classList.toggle("active", LANG==="th");
+  document.getElementById("langEN").classList.toggle("active", LANG==="en");
+  applyUI();
+  renderLastPlayHint();
+  if(state.screen==="game") render();
+  if(state.screen==="stage") renderStageHistory();
+}
+function applyUI(){
+  const t = UI[LANG];
+  document.getElementById("title").textContent = t.title;
+  document.getElementById("subtitle").textContent = t.subtitle;
+  document.getElementById("badgeLabel").textContent = t.badgeLabel;
+
+  document.getElementById("loginTitle").textContent = t.loginTitle;
+  document.getElementById("loginHint").textContent = t.loginHint;
+  document.getElementById("howTitle").textContent = t.howTitle;
+  document.getElementById("howText").innerHTML = t.howText;
+  document.getElementById("tipLabel").textContent = t.tipLabel;
+  document.getElementById("tipText").textContent = t.tipText;
+
+  document.getElementById("stageTitle").textContent = t.stageTitle;
+  document.getElementById("s1Title").textContent = t.s1Title;
+  document.getElementById("s1Desc").textContent = t.s1Desc;
+  document.getElementById("s2Title").textContent = t.s2Title;
+  document.getElementById("s2Desc").textContent = t.s2Desc;
+  document.getElementById("s3Title").textContent = t.s3Title;
+  document.getElementById("s3Desc").textContent = t.s3Desc;
+  document.getElementById("s1Tag").textContent = t.ready;
+  document.getElementById("s2Tag").textContent = t.ready;
+  document.getElementById("s3Tag").textContent = t.ready;
+  document.getElementById("play1").textContent = t.play1;
+  document.getElementById("play2").textContent = t.play2;
+  document.getElementById("play3").textContent = t.play3;
+  document.getElementById("backLogin").textContent = t.backLogin;
+  document.getElementById("histTitle").textContent = t.histTitle;
+  document.getElementById("clearHist").textContent = t.clearHist;
+
+  document.getElementById("btnPrev").textContent = t.btnPrev;
+  document.getElementById("btnNext").textContent = t.btnNext;
+  document.getElementById("btnFinish").textContent = t.btnFinish;
+  document.getElementById("btnExit").textContent = t.btnExit;
+  document.getElementById("lockNote").textContent = t.lockNote;
+
+  document.getElementById("hist2Title").textContent = t.hist2Title;
+  document.getElementById("clearStage").textContent = t.clearStage;
+  document.getElementById("replay").textContent = t.replay;
+  document.getElementById("backStages").textContent = t.backStages;
+}
+
+/* =======================
+   Tiny sounds (WebAudio)
+======================= */
+let audioCtx = null;
+function beep(freq=740, dur=0.06, gain=0.05){
+  try{
+    if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type="sine";
+    o.frequency.value=freq;
+    g.gain.value=gain;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start();
+    o.stop(audioCtx.currentTime + dur);
+  }catch(e){}
+}
+function sClick(){beep(520,0.05,0.05)}
+function sOk(){beep(880,0.08,0.06)}
+function sBad(){beep(220,0.09,0.06)}
+
+/* =======================
+   Data: Stage 1 (30)
+======================= */
+const STAGE_DATA = {
+  1: [
+    {q_th:"หน้าที่หลักของระบบสืบพันธุ์คืออะไร",q_en:"What is the main function of the reproductive system?",options_th:["สร้างพลังงานให้ร่างกาย", "สร้างเซลล์สืบพันธุ์และทำให้เกิดการสืบพันธุ์", "ย่อยอาหาร", "แลกเปลี่ยนแก๊ส"],options_en:["Produce energy for the body", "Produce gametes and enable reproduction", "Digest food", "Exchange gases"],a:1},
+    {q_th:"เซลล์สืบพันธุ์เพศชายเรียกว่าอะไร",q_en:"What is the male gamete called?",options_th:["ไข่ (ovum)", "อสุจิ (sperm)", "เม็ดเลือดแดง", "เม็ดเลือดขาว"],options_en:["Ovum", "Sperm", "Red blood cell", "White blood cell"],a:1},
+    {q_th:"เซลล์สืบพันธุ์เพศหญิงเรียกว่าอะไร",q_en:"What is the female gamete called?",options_th:["ไข่ (ovum)", "อสุจิ (sperm)", "เกล็ดเลือด", "ฮอร์โมน"],options_en:["Ovum (egg)", "Sperm", "Platelet", "Hormone"],a:0},
+    {q_th:"อัณฑะ (testes) มีหน้าที่สำคัญข้อใด",q_en:"The testes mainly…",options_th:["สร้างไข่", "สร้างอสุจิและผลิตฮอร์โมนเพศชาย", "สร้างน้ำดี", "กรองเลือด"],options_en:["Produce eggs", "Produce sperm and male sex hormones", "Produce bile", "Filter blood"],a:1},
+    {q_th:"อสุจิถูกสร้างมากที่สุดที่ส่วนใด",q_en:"Sperm are produced mainly in the…",options_th:["ท่อสร้างอสุจิ (seminiferous tubules)", "กระเพาะปัสสาวะ", "มดลูก", "รังไข่"],options_en:["Seminiferous tubules", "Urinary bladder", "Uterus", "Ovary"],a:0},
+    {q_th:"ถุงอัณฑะ (scrotum) ช่วยอะไร",q_en:"The scrotum helps by…",options_th:["ทำให้ปอดพอง", "ควบคุมอุณหภูมิให้เหมาะต่อการสร้างอสุจิ", "ย่อยไขมัน", "ดูดซึมน้ำ"],options_en:["Inflate lungs", "Regulating temperature for sperm production", "Digest fats", "Absorb water"],a:1},
+    {q_th:"ท่อนำอสุจิ (vas deferens) ทำหน้าที่อะไร",q_en:"What is the function of the vas deferens?",options_th:["ลำเลียงอสุจิจากอัณฑะไปท่อปัสสาวะ", "สร้างไข่", "เก็บปัสสาวะ", "สร้างฮอร์โมนเพศหญิง"],options_en:["Transport sperm from testes to urethra", "Produce eggs", "Store urine", "Produce female hormones"],a:0},
+    {q_th:"ต่อมลูกหมาก (prostate gland) มีบทบาทใด",q_en:"The prostate gland…",options_th:["สร้างน้ำเลี้ยงอสุจิบางส่วน", "สร้างไข่", "สร้างน้ำดี", "สร้างเม็ดเลือดแดง"],options_en:["Produces part of seminal fluid", "Produces eggs", "Produces bile", "Produces red blood cells"],a:0},
+    {q_th:"ถุงน้ำเชื้อ/ต่อมสร้างน้ำเลี้ยงอสุจิ (seminal vesicles) ช่วยอะไร",q_en:"Seminal vesicles mainly…",options_th:["สร้างสารอาหารในน้ำเชื้อเพื่อหล่อเลี้ยงอสุจิ", "ทำให้เลือดแข็งตัว", "สร้างน้ำย่อย", "กรองของเสีย"],options_en:["Add nutrients to semen to nourish sperm", "Clot blood", "Make digestive juice", "Filter wastes"],a:0},
+    {q_th:"อวัยวะหลักของระบบสืบพันธุ์เพศหญิงที่ผลิตไข่คืออะไร",q_en:"Which female organ produces eggs?",options_th:["มดลูก", "รังไข่", "ท่อนำไข่", "ช่องคลอด"],options_en:["Uterus", "Ovary", "Fallopian tube", "Vagina"],a:1},
+    {q_th:"ท่อนำไข่ (fallopian tube) มีหน้าที่สำคัญข้อใด",q_en:"The fallopian tube mainly…",options_th:["เป็นที่ฝังตัวของตัวอ่อน", "เป็นที่ปฏิสนธิ (บ่อยที่สุด) และลำเลียงไข่ไปมดลูก", "สร้างอสุจิ", "เก็บปัสสาวะ"],options_en:["Is where implantation occurs", "Is where fertilization often occurs and transports the egg to uterus", "Produces sperm", "Stores urine"],a:1},
+    {q_th:"มดลูก (uterus) มีหน้าที่หลักข้อใด",q_en:"The uterus mainly…",options_th:["สร้างไข่", "เป็นที่ฝังตัวและเจริญของตัวอ่อน/ทารก", "ลำเลียงอสุจิออกนอกตัว", "สร้างน้ำย่อย"],options_en:["Produces eggs", "Is where embryo implants and develops", "Transports sperm out", "Makes digestive juice"],a:1},
+    {q_th:"เยื่อบุโพรงมดลูกมีบทบาทอย่างไร",q_en:"The uterine lining (endometrium) is…",options_th:["ผนังกล้ามเนื้อหัวใจ", "ชั้นที่หนาตัวเพื่อรองรับการฝังตัวของตัวอ่อน", "ท่อกรองของเสีย", "ถุงลมปอด"],options_en:["Heart muscle wall", "A layer that thickens to support implantation", "A waste-filtering tube", "Alveoli"],a:1},
+    {q_th:"ช่องคลอด (vagina) ทำหน้าที่ใด",q_en:"The vagina functions as…",options_th:["ทางผ่านของทารกและเป็นทางรับอสุจิ", "ท่อสร้างอสุจิ", "ท่อไต", "ทางเดินอากาศ"],options_en:["Birth canal and receives sperm", "Sperm-producing tube", "Ureter", "Airway"],a:0},
+    {q_th:"ปากมดลูก (cervix) อยู่ระหว่างส่วนใด",q_en:"The cervix is between the…",options_th:["ช่องคลอดกับมดลูก", "ปอดกับหัวใจ", "กระเพาะกับลำไส้", "ไตกับกระเพาะปัสสาวะ"],options_en:["Vagina and uterus", "Lungs and heart", "Stomach and intestine", "Kidney and bladder"],a:0},
+    {q_th:"อสุจิ + ไข่ รวมกันเรียกว่าอะไร",q_en:"A sperm and egg together form a…",options_th:["เซลล์ร่างกาย", "ไซโกต (zygote)", "เม็ดเลือด", "ฮอร์โมน"],options_en:["Somatic cell", "Zygote", "Blood cell", "Hormone"],a:1},
+    {q_th:"ข้อใดเป็นลักษณะเด่นของอสุจิ",q_en:"Which is a key feature of sperm cells?",options_th:["มีขนาดใหญ่และไม่เคลื่อนที่", "มีหางช่วยเคลื่อนที่", "มีผนังหนาเหมือนพืช", "มีคลอโรพลาสต์"],options_en:["Large and immobile", "Has a tail for movement", "Has thick plant-like wall", "Has chloroplasts"],a:1},
+    {q_th:"ข้อใดเป็นลักษณะเด่นของไข่ (ovum)",q_en:"Which is a key feature of the ovum?",options_th:["เล็กมากและเคลื่อนที่เองเร็ว", "มีสารอาหารสะสมและมีขนาดใหญ่กว่าอสุจิ", "มีหางยาว", "ไม่มีนิวเคลียส"],options_en:["Very tiny and moves fast", "Contains stored nutrients and is larger than sperm", "Has a long tail", "Has no nucleus"],a:1},
+    {q_th:"อวัยวะใดเกี่ยวข้องกับการผลิตฮอร์โมนเพศหญิง",q_en:"Which organ produces female sex hormones?",options_th:["รังไข่", "มดลูก", "ช่องคลอด", "ท่อปัสสาวะ"],options_en:["Ovary", "Uterus", "Vagina", "Urethra"],a:0},
+    {q_th:"ฮอร์โมนเพศชายหลักที่เกี่ยวข้องกับลักษณะเพศชายคืออะไร",q_en:"The main male sex hormone is…",options_th:["เอสโตรเจน", "เทสโทสเทอโรน", "อินซูลิน", "อะดรีนาลีน"],options_en:["Estrogen", "Testosterone", "Insulin", "Adrenaline"],a:1},
+    {q_th:"ฮอร์โมนเพศหญิงหลัก 2 ชนิดที่เกี่ยวข้องกับรอบเดือนคืออะไร",q_en:"Two main female hormones involved in the menstrual cycle are…",options_th:["อินซูลินและกลูคากอน", "เอสโตรเจนและโปรเจสเตอโรน", "ไทรอกซินและอะดรีนาลีน", "ADH และแอลโดสเตอโรน"],options_en:["Insulin and glucagon", "Estrogen and progesterone", "Thyroxine and adrenaline", "ADH and aldosterone"],a:1},
+    {q_th:"วัยแรกรุ่นคือช่วงใดของชีวิต",q_en:"Puberty is the period when…",options_th:["เด็กหยุดโต", "ร่างกายเริ่มพัฒนาเข้าสู่วัยเจริญพันธุ์", "ร่างกายหยุดสร้างฮอร์โมน", "ระบบย่อยอาหารหยุดทำงาน"],options_en:["A child stops growing", "The body begins developing reproductive maturity", "The body stops hormones", "Digestion stops"],a:1},
+    {q_th:"ข้อใดเป็นการเปลี่ยนแปลงในวัยแรกรุ่นที่พบได้ทั้งชายและหญิง",q_en:"A change seen in both boys and girls during puberty is…",options_th:["เสียงแตกเท่านั้น", "มีขนรักแร้/ขนตามร่างกายเพิ่มขึ้น", "มีประจำเดือนเท่านั้น", "มีหนวดเคราเท่านั้น"],options_en:["Voice deepening only", "Increased body/armpit hair", "Menstruation only", "Facial hair only"],a:1},
+    {q_th:"การมีประจำเดือนเกี่ยวข้องกับอวัยวะใดโดยตรง",q_en:"Menstruation is directly related to the…",options_th:["มดลูกและเยื่อบุโพรงมดลูก", "ปอด", "กระเพาะอาหาร", "ไต"],options_en:["Uterus and endometrium", "Lungs", "Stomach", "Kidneys"],a:0},
+    {q_th:"ข้อใดถูกต้องเกี่ยวกับ “การสืบพันธุ์แบบอาศัยเพศ”",q_en:"Which statement about sexual reproduction is correct?",options_th:["ใช้เซลล์สืบพันธุ์เพียงชนิดเดียว", "เกิดจากการรวมตัวของเซลล์สืบพันธุ์จากพ่อและแม่", "ไม่ทำให้เกิดความหลากหลาย", "พบเฉพาะพืช"],options_en:["Uses only one type of gamete", "Involves fusion of gametes from two parents", "Does not create diversity", "Only in plants"],a:1}
+  ],
+  2: [
+    {q_th:"การตกไข่ (ovulation) หมายถึงอะไร",q_en:"Ovulation means…",options_th:["การสร้างอสุจิ", "การปล่อยไข่ออกจากรังไข่", "การฝังตัวของตัวอ่อน", "การขับปัสสาวะ"],options_en:["Sperm production", "Release of an egg from an ovary", "Implantation", "Urination"],a:1},
+    {q_th:"ช่วงที่มีโอกาสตั้งครรภ์มากมักใกล้กับเหตุการณ์ใด",q_en:"Pregnancy is most likely around…",options_th:["ก่อนมีประจำเดือนทันทีเสมอ", "ช่วงตกไข่", "หลังประจำเดือนหมดไปนานมากเสมอ", "ช่วงนอนหลับ"],options_en:["Right before menstruation always", "Ovulation", "Long after period always", "Sleeping"],a:1},
+    {q_th:"รอบเดือนโดยทั่วไปนับเริ่มจากวันใด",q_en:"A menstrual cycle is usually counted from…",options_th:["วันตกไข่", "วันแรกที่มีประจำเดือน", "วันสุดท้ายที่มีประจำเดือน", "วันใดก็ได้"],options_en:["Ovulation day", "The first day of menstruation", "The last day of menstruation", "Any day"],a:1},
+    {q_th:"ถ้าไม่มีการปฏิสนธิ เยื่อบุโพรงมดลูกจะเกิดอะไร",q_en:"If fertilization does not occur, the uterine lining…",options_th:["หนาตัวตลอดไป", "หลุดลอกออกเป็นประจำเดือน", "กลายเป็นรก", "เปลี่ยนเป็นรังไข่"],options_en:["Stays thick forever", "Sheds as menstruation", "Becomes placenta", "Turns into ovary"],a:1},
+    {q_th:"ฮอร์โมนโปรเจสเตอโรนมีบทบาทสำคัญต่ออะไร",q_en:"Progesterone mainly helps…",options_th:["ทำให้ถุงลมพอง", "ทำให้เยื่อบุโพรงมดลูกพร้อมต่อการฝังตัวและคงสภาพ", "ย่อยอาหาร", "ทำให้เลือดแข็งตัว"],options_en:["Inflate alveoli", "Prepare and maintain the uterine lining for implantation", "Digest food", "Clot blood"],a:1},
+    {q_th:"การสร้างอสุจิเริ่มเด่นชัดมากขึ้นในช่วงใด",q_en:"Sperm production increases notably during…",options_th:["วัยแรกรุ่น", "วัยทารก", "วัยชราเท่านั้น", "ช่วงก่อนเกิด"],options_en:["Puberty", "Infancy", "Only old age", "Before birth"],a:0},
+    {q_th:"ข้อใดเป็นการเปลี่ยนแปลงของเพศชายในวัยแรกรุ่น",q_en:"A puberty change in boys is…",options_th:["เต้านมสร้างน้ำนม", "เสียงทุ้มขึ้นและมีหนวดเครา", "มีประจำเดือน", "มดลูกขยาย"],options_en:["Milk production", "Deeper voice and facial hair", "Menstruation", "Uterus enlarges"],a:1},
+    {q_th:"ข้อใดเป็นการเปลี่ยนแปลงของเพศหญิงในวัยแรกรุ่น",q_en:"A puberty change in girls is…",options_th:["เสียงแตกมากเหมือนผู้ใหญ่เพศชายเสมอ", "เริ่มมีประจำเดือนและเต้านมพัฒนา", "มีหนวดเครามาก", "อัณฑะโต"],options_en:["Voice always deepens like adult males", "Menstruation begins and breasts develop", "Lots of facial hair", "Testes enlarge"],a:1},
+    {q_th:"ฮอร์โมนเทสโทสเทอโรนช่วยอะไรเป็นหลัก",q_en:"Testosterone mainly…",options_th:["พัฒนาลักษณะเพศชายและช่วยการสร้างอสุจิ", "ทำให้เกิดประจำเดือน", "สร้างน้ำดี", "สร้างเม็ดเลือดขาว"],options_en:["Develops male characteristics and supports sperm production", "Causes menstruation", "Makes bile", "Makes WBC"],a:0},
+    {q_th:"ฮอร์โมนเอสโตรเจนช่วยอะไรเป็นหลัก",q_en:"Estrogen mainly…",options_th:["พัฒนาลักษณะเพศหญิงและเกี่ยวข้องกับเยื่อบุโพรงมดลูก", "ทำให้ถุงลมขยาย", "ย่อยแป้ง", "ทำให้เลือดแข็งตัว"],options_en:["Develops female characteristics and affects uterine lining", "Expands alveoli", "Digests starch", "Clots blood"],a:0},
+    {q_th:"คำว่า “ลักษณะเพศทุติยภูมิ” หมายถึงอะไร",q_en:"Secondary sex characteristics are…",options_th:["อวัยวะสืบพันธุ์โดยตรง", "ลักษณะที่เกิดขึ้นในวัยแรกรุ่น เช่น เสียง ขน รูปร่าง", "ลักษณะของกระดูกเท่านั้น", "ลักษณะของเม็ดเลือดแดง"],options_en:["Direct reproductive organs", "Traits developing at puberty (voice, hair, body shape)", "Only bone traits", "RBC traits"],a:1},
+    {q_th:"ทำไมอัณฑะจึงอยู่นอกช่องท้อง",q_en:"Why are testes located outside the body cavity?",options_th:["เพื่อรับแสง", "เพื่อให้อุณหภูมิต่ำกว่าร่างกายเล็กน้อย เหมาะต่อการสร้างอสุจิ", "เพื่อย่อยอาหาร", "เพื่อกรองเลือด"],options_en:["To receive light", "To keep a slightly cooler temperature for sperm production", "To digest food", "To filter blood"],a:1},
+    {q_th:"“การปฏิสนธิ” หมายถึงอะไร",q_en:"Fertilization means…",options_th:["การหลุดลอกของเยื่อบุโพรงมดลูก", "การรวมตัวของอสุจิกับไข่เกิดเป็นไซโกต", "การสร้างฮอร์โมน", "การขับถ่ายเหงื่อ"],options_en:["Shedding uterine lining", "Fusion of sperm and egg forming a zygote", "Hormone production", "Sweating"],a:1},
+    {q_th:"ที่ใดเป็นตำแหน่งที่เกิดการปฏิสนธิบ่อยที่สุดในมนุษย์",q_en:"Where does fertilization most often occur in humans?",options_th:["มดลูก", "ท่อนำไข่", "กระเพาะปัสสาวะ", "ช่องคลอด"],options_en:["Uterus", "Fallopian tube", "Urinary bladder", "Vagina"],a:1},
+    {q_th:"หลังปฏิสนธิ ไซโกตเริ่มแบ่งเซลล์และเคลื่อนเข้าสู่มดลูกผ่านอะไร",q_en:"After fertilization, the zygote moves to the uterus through the…",options_th:["ท่อไต", "ท่อนำไข่", "หลอดลม", "หลอดเลือดแดง"],options_en:["Ureter", "Fallopian tube", "Trachea", "Artery"],a:1},
+    {q_th:"“การฝังตัว” หมายถึงอะไร",q_en:"Implantation means…",options_th:["อสุจิออกจากร่างกาย", "ตัวอ่อนเกาะที่เยื่อบุโพรงมดลูก", "ไข่หลุดออกจากรังไข่", "เลือดไหลออกจากมดลูก"],options_en:["Sperm leaving the body", "Embryo attaching to the uterine lining", "Egg leaving ovary", "Blood leaving uterus"],a:1},
+    {q_th:"ข้อใดถูกต้องเกี่ยวกับ “รก” (placenta)",q_en:"Which is true about the placenta?",options_th:["เป็นส่วนของปอดทารก", "แลกเปลี่ยนสารอาหาร/ออกซิเจน และของเสียระหว่างแม่กับทารก", "เป็นต่อมน้ำลาย", "เป็นส่วนของกระเพาะปัสสาวะ"],options_en:["Part of baby's lungs", "Exchanges nutrients/oxygen and wastes between mother and fetus", "A salivary gland", "Part of bladder"],a:1},
+    {q_th:"สายสะดือมีหน้าที่ใด",q_en:"The umbilical cord…",options_th:["พาทารกหายใจเอง", "เชื่อมทารกกับรกเพื่อรับส่งสาร", "สร้างไข่", "สร้างอสุจิ"],options_en:["Lets baby breathe on its own", "Connects fetus to placenta for transport", "Produces eggs", "Produces sperm"],a:1},
+    {q_th:"การตั้งครรภ์โดยทั่วไปนานประมาณเท่าใด",q_en:"Human pregnancy typically lasts about…",options_th:["3 เดือน", "9 เดือน (ประมาณ 40 สัปดาห์)", "18 เดือน", "2 ปี"],options_en:["3 months", "9 months (~40 weeks)", "18 months", "2 years"],a:1},
+    {q_th:"ข้อใดเป็นการดูแลสุขภาพที่เหมาะสมในวัยแรกรุ่น",q_en:"A healthy practice during puberty is…",options_th:["ไม่ต้องอาบน้ำ", "รักษาความสะอาดร่างกายและอวัยวะเพศ", "งดอาหารทุกชนิด", "นอนน้อยๆ"],options_en:["Never bathe", "Maintain hygiene of body and genitals", "Avoid all food", "Sleep very little"],a:1},
+    {q_th:"เหตุใดการรักษาความสะอาดอวัยวะสืบพันธุ์จึงสำคัญ",q_en:"Why is genital hygiene important?",options_th:["เพื่อให้เสียงเพราะ", "ลดการสะสมเชื้อโรคและกลิ่น ลดการอักเสบ", "เพื่อให้สูงขึ้น", "เพื่อให้ย่อยอาหารดีขึ้น"],options_en:["To improve voice", "Reduce germs/odor and inflammation", "To grow taller", "To digest better"],a:1},
+    {q_th:"ข้อใดเป็นคำอธิบายที่ถูกต้องเกี่ยวกับ “การสืบพันธุ์”",q_en:"Which is a correct statement about reproduction?",options_th:["ทำให้สิ่งมีชีวิตสูญพันธุ์", "ทำให้เกิดสิ่งมีชีวิตรุ่นใหม่", "ทำให้หยุดการเจริญเติบโต", "ทำให้ระบบหายใจหยุดทำงาน"],options_en:["Causes extinction", "Produces a new generation", "Stops growth", "Stops respiration"],a:1},
+    {q_th:"การเปลี่ยนแปลงทางอารมณ์ในวัยแรกรุ่นเกิดได้เพราะอะไร",q_en:"Mood changes during puberty can occur because…",options_th:["ฮอร์โมนเปลี่ยนแปลงและร่างกายกำลังพัฒนา", "เพราะปอดเล็กลง", "เพราะไตหยุดทำงาน", "เพราะเลือดหยุดไหล"],options_en:["Hormone changes and body development", "Lungs shrink", "Kidneys stop", "Blood stops flowing"],a:0},
+    {q_th:"ข้อใดเป็นการเคารพขอบเขตส่วนตัว (personal boundaries) ที่เหมาะสม",q_en:"Which is an appropriate personal boundary practice?",options_th:["ยอมให้ใครจับตัวได้เสมอ", "ปฏิเสธเมื่อไม่สบายใจและขอความช่วยเหลือจากผู้ใหญ่ที่ไว้ใจได้", "ไม่ต้องบอกใครเมื่อถูกคุกคาม", "เก็บความลับไว้คนเดียวเสมอ"],options_en:["Always allow anyone to touch you", "Say no when uncomfortable and seek help from a trusted adult", "Never tell anyone if harassed", "Always keep it secret"],a:1},
+    {q_th:"การปฏิสนธิต้องมีการพบกันของอะไร",q_en:"Fertilization requires the meeting of…",options_th:["เม็ดเลือดแดงกับเม็ดเลือดขาว", "อสุจิกับไข่", "น้ำดีกับเอนไซม์", "ออกซิเจนกับคาร์บอนไดออกไซด์"],options_en:["Red and white blood cells", "Sperm and egg", "Bile and enzymes", "Oxygen and carbon dioxide"],a:1}
+  ],
+  3: [
+    {q_th:"ระบบสืบพันธุ์สัมพันธ์กับระบบต่อมไร้ท่ออย่างไร",q_en:"How is the reproductive system linked to the endocrine system?",options_th:["ไม่เกี่ยวข้องกัน", "ฮอร์โมนควบคุมการทำงานและการเปลี่ยนแปลงในวัยแรกรุ่น", "ต่อมไร้ท่อใช้ย่อยอาหาร", "ฮอร์โมนใช้แลกเปลี่ยนแก๊ส"],options_en:["They are unrelated", "Hormones regulate functions and puberty changes", "Endocrine glands digest food", "Hormones exchange gases"],a:1},
+    {q_th:"เหตุใดระบบไหลเวียนเลือดจึงสำคัญต่อการตั้งครรภ์",q_en:"Why is the circulatory system important in pregnancy?",options_th:["ขนส่งสารอาหารและออกซิเจนไปยังรกและทารก", "ทำให้เกิดเสียง", "ทำให้ย่อยอาหารอย่างเดียว", "ทำให้ไตหยุดทำงาน"],options_en:["It transports nutrients and oxygen to the placenta and fetus", "It creates voice", "It only digests food", "It stops kidney function"],a:0},
+    {q_th:"ระบบหายใจของแม่มีความเกี่ยวข้องกับทารกอย่างไร",q_en:"How is the mother's respiratory system related to the fetus?",options_th:["ทารกหายใจด้วยปอดแม่โดยตรง", "ออกซิเจนจากแม่ถูกส่งผ่านรกไปทารก", "ทารกสร้างออกซิเจนเองจากแสง", "ไม่เกี่ยวข้อง"],options_en:["The fetus breathes directly with the mother's lungs", "Oxygen from the mother passes through the placenta to the fetus", "The fetus makes oxygen from light", "Not related"],a:1},
+    {q_th:"หากไม่มีการปฏิสนธิ ร่างกายผู้หญิงจะเกิดอะไรต่อเนื่อง",q_en:"If fertilization does not occur, what happens next?",options_th:["รกจะสร้างทันที", "เกิดการมีประจำเดือนจากการหลุดลอกของเยื่อบุโพรงมดลูก", "อสุจิจะเพิ่มขึ้นในมดลูก", "ตัวอ่อนจะฝังตัวเอง"],options_en:["Placenta forms immediately", "Menstruation occurs as the uterine lining sheds", "Sperm increase in the uterus", "Embryo implants itself"],a:1},
+    {q_th:"การตั้งครรภ์เกิดขึ้นเมื่อใด",q_en:"Pregnancy begins when…",options_th:["มีประจำเดือน", "ตัวอ่อนฝังตัวที่เยื่อบุโพรงมดลูก", "อสุจิถูกสร้าง", "ไข่ถูกสร้าง"],options_en:["Menstruation happens", "An embryo implants in the uterine lining", "Sperm are produced", "Egg is formed"],a:1},
+    {q_th:"การดูแลตนเองในวัยแรกรุ่นที่สำคัญที่สุดข้อหนึ่งคืออะไร",q_en:"One of the most important self-care actions in puberty is…",options_th:["ละเลยสุขอนามัย", "รู้จักการเปลี่ยนแปลงของร่างกายและดูแลสุขอนามัย", "กินหวานอย่างเดียว", "ไม่นอน"],options_en:["Ignore hygiene", "Understand body changes and maintain hygiene", "Eat only sweets", "Never sleep"],a:1},
+    {q_th:"ข้อใดเป็นเหตุผลที่ควรหลีกเลี่ยงการมีเพศสัมพันธ์ก่อนวัยอันควร",q_en:"Why should early sexual activity be avoided?",options_th:["ไม่มีผลอะไร", "เสี่ยงตั้งครรภ์ไม่พร้อมและโรคติดต่อ รวมทั้งผลกระทบทางใจ/สังคม", "ทำให้ตัวสูงขึ้น", "ทำให้ปอดแข็งแรง"],options_en:["No effects", "Risk of unplanned pregnancy and STIs, plus social/emotional impacts", "Makes you taller", "Strengthens lungs"],a:1},
+    {q_th:"การคุมกำเนิดมีเป้าหมายหลักเพื่ออะไร",q_en:"The main goal of contraception is to…",options_th:["ทำให้ย่อยอาหารดีขึ้น", "ป้องกันการตั้งครรภ์ไม่พร้อม", "ทำให้เสียงทุ้ม", "ทำให้เลือดแข็งตัว"],options_en:["Improve digestion", "Prevent unplanned pregnancy", "Deepen voice", "Clot blood"],a:1},
+    {q_th:"ถุงยางอนามัยช่วยอะไรได้ 2 อย่างเด่นๆ",q_en:"Condoms help with two key things:",options_th:["เพิ่มกล้ามเนื้อและสูงขึ้น", "ช่วยลดโอกาสตั้งครรภ์และลดความเสี่ยงโรคติดต่อทางเพศสัมพันธ์บางชนิด", "ทำให้หายใจดีขึ้น", "ทำให้ย่อยอาหารเร็วขึ้น"],options_en:["Build muscle and grow taller", "Help prevent pregnancy and reduce risk of some STIs", "Improve breathing", "Speed digestion"],a:1},
+    {q_th:"โรคติดต่อทางเพศสัมพันธ์ (STIs) ติดต่อได้อย่างไร",q_en:"How can STIs be transmitted?",options_th:["กินอาหารร่วมกันเท่านั้น", "มีเพศสัมพันธ์โดยไม่ป้องกันหรือสัมผัสสารคัดหลั่ง", "หายใจในห้องเดียวกันเสมอ", "อ่านหนังสือร่วมกัน"],options_en:["Only by sharing food", "Unprotected sex or contact with bodily fluids", "Always by sharing air", "By reading together"],a:1},
+    {q_th:"หากมีอาการผิดปกติ เช่น แสบ คัน มีตกขาวผิดปกติ ควรทำอย่างไร",q_en:"If there are unusual symptoms (itching, burning, abnormal discharge), you should…",options_th:["ไม่ต้องทำอะไร", "ปรึกษาผู้ปกครอง/ผู้ใหญ่ที่ไว้ใจและพบแพทย์", "กินน้ำหวานอย่างเดียว", "ออกกำลังกายหนักๆทันที"],options_en:["Do nothing", "Tell a trusted adult and see a doctor", "Drink only sugary water", "Exercise intensely immediately"],a:1},
+    {q_th:"ข้อใดเป็นตัวอย่างของการเคารพความยินยอม (consent)",q_en:"Which is an example of respecting consent?",options_th:["บังคับเมื่ออีกฝ่ายไม่พร้อม", "หยุดทันทีเมื่ออีกฝ่ายไม่ยินยอม และเคารพการตัดสินใจ", "ไม่ต้องถามอีกฝ่าย", "ทำตามเพื่อน"],options_en:["Force when the other isn't ready", "Stop when there is no consent and respect decisions", "No need to ask", "Follow friends"],a:1},
+    {q_th:"หากถูกคุกคามทางเพศหรือถูกแตะต้องร่างกายโดยไม่ยินยอม ควรทำอย่างไร",q_en:"If you are sexually harassed or touched without consent, you should…",options_th:["เก็บไว้คนเดียว", "บอกผู้ใหญ่ที่ไว้ใจ/ครู/ผู้ปกครอง และขอความช่วยเหลือทันที", "ยอมรับไป", "โทษตัวเอง"],options_en:["Keep it to yourself", "Tell a trusted adult/teacher/parent and seek help immediately", "Accept it", "Blame yourself"],a:1},
+    {q_th:"สรุประบบสืบพันธุ์ที่ถูกต้องที่สุดคือข้อใด",q_en:"Which best summarizes the reproductive system?",options_th:["ระบบสร้างพลังงาน", "ระบบสร้างเซลล์สืบพันธุ์และทำให้เกิดรุ่นใหม่ พร้อมต้องดูแลสุขภาพอย่างรับผิดชอบ", "ระบบย่อยอาหาร", "ระบบแลกเปลี่ยนแก๊ส"],options_en:["Energy production system", "Produces gametes and new generation; requires responsible health care", "Digestive system", "Gas exchange system"],a:1},
+    {q_th:"เหตุใดการเรียนเรื่องระบบสืบพันธุ์จึงสำคัญ",q_en:"Why is learning about reproduction important?",options_th:["เพื่อให้ป่วยบ่อยขึ้น", "เพื่อเข้าใจร่างกาย การเปลี่ยนแปลงวัยแรกรุ่น และการดูแลตนเองอย่างปลอดภัย", "เพื่อให้ย่อยอาหารได้ดี", "เพื่อทำให้หายใจเร็วขึ้น"],options_en:["To get sick more often", "To understand the body, puberty changes, and safe self-care", "To digest better", "To breathe faster"],a:1}
+  ],
+};
+
+/* =======================
+   State & LocalStorage
+======================= */
+const state = {
+  screen: "login", // login | stage | game | result
+  playerName: "",
+  stage: 1,
+  idx: 0,
+  picked: [],
+  judged: [],
+  orderMaps: []
+};
+function keyAll(){ return "kruPai_digestive_history_v1"; } // {name:{stage1:[],stage2:[],stage3:[]}}
+function loadAllHistory(){
+  try{ return JSON.parse(localStorage.getItem(keyAll()) || "{}"); }
+  catch(e){ return {}; }
+}
+function saveAllHistory(obj){
+  localStorage.setItem(keyAll(), JSON.stringify(obj));
+}
+function ensureNameRecord(all, name){
+  if(!all[name]) all[name] = {stage1:[],stage2:[],stage3:[]};
+  if(!all[name].stage1) all[name].stage1=[];
+  if(!all[name].stage2) all[name].stage2=[];
+  if(!all[name].stage3) all[name].stage3=[];
+}
+function getStageArr(all, name, stage){
+  ensureNameRecord(all,name);
+  return stage===1? all[name].stage1 : stage===2? all[name].stage2 : all[name].stage3;
+}
+function addAttempt(name, stage, score, total){
+  const all = loadAllHistory();
+  ensureNameRecord(all,name);
+  const now = new Date();
+  const stamp = now.toLocaleString("th-TH",{hour12:false});
+  const arr = getStageArr(all,name,stage);
+  arr.unshift({t:stamp, score, total});
+  all[name][stage===1?"stage1":stage===2?"stage2":"stage3"] = arr.slice(0,20);
+  saveAllHistory(all);
+}
+function clearAllMyHistory(){
+  if(!state.playerName) return;
+  const all = loadAllHistory();
+  delete all[state.playerName];
+  saveAllHistory(all);
+  renderStageHistory();
+  renderLastPlayHint();
+}
+function clearMyStageHistory(){
+  if(!state.playerName) return;
+  const all = loadAllHistory();
+  ensureNameRecord(all,state.playerName);
+  all[state.playerName][state.stage===1?"stage1":state.stage===2?"stage2":"stage3"] = [];
+  saveAllHistory(all);
+  renderHistoryThisStage();
+}
+function praiseByScore(score,total){
+  const pct = Math.round(score*100/total);
+  if(pct>=90) return {text: LANG==="th" ? "🌟 สุดยอดมาก! เก่งขั้นเทพเลย!" : "🌟 Amazing! You’re a superstar!", tone:"var(--ok)"};
+  if(pct>=75) return {text: LANG==="th" ? "💙 เก่งมาก! อีกนิดเดียวจะสุดยอดแล้ว!" : "💙 Great job! You’re almost there!", tone:"var(--brand)"};
+  if(pct>=60) return {text: LANG==="th" ? "✨ เกือบผ่านแล้ว! ฝึกอีกนิดจะปังมาก!" : "✨ Nice! A bit more practice and you’ll shine!", tone:"var(--accent)"};
+  return {text: LANG==="th" ? "😊 สู้ๆ นะจ๊ะ ลองใหม่อีกครั้ง เดี๋ยวเก่งขึ้นแน่นอน!" : "😊 Keep going! Try again — you’ll improve!", tone:"var(--muted)"};
+}
+
+/* =======================
+   Navigation between screens
+======================= */
+function show(id){
+  document.getElementById("screenLogin").style.display = (id==="login") ? "block" : "none";
+  document.getElementById("screenStage").style.display = (id==="stage") ? "block" : "none";
+  document.getElementById("screenGame").style.display  = (id==="game")  ? "block" : "none";
+  document.getElementById("screenResult").style.display= (id==="result")? "block" : "none";
+  state.screen = id;
+  document.getElementById("progressText").textContent = "";
+}
+function backToLogin(){
+  sClick();
+  show("login");
+}
+function goStageSelect(){
+  sClick();
+  const input = document.getElementById("playerNameInput");
+  const name = (input.value||"").trim();
+  if(!name){
+    alert(LANG==="th" ? "กรุณาพิมพ์ชื่อก่อนเล่นนะจ๊ะ 😊" : "Please enter a name 😊");
+    input.focus(); return;
+  }
+  state.playerName = name;
+  document.getElementById("playerBadgeName").textContent = name;
+  document.getElementById("playerBadge").style.display = "inline-flex";
+  show("stage");
+  renderStageHistory();
+}
+function exitToStages(){
+  sClick();
+  show("stage");
+  renderStageHistory();
+}
+function startStage(n){
+  sClick();
+  state.stage = n;
+  resetStageState();
+  state.answers = [];
+show("game");
+  render();
+}
+function replayStage(){
+  sClick();
+  resetStageState();
+  show("game");
+  render();
+}
+
+/* =======================
+   Stage gameplay
+======================= */
+function resetStageState(){
+  state.idx = 0;
+  const DATA = STAGE_DATA[state.stage] || [];
+  state.picked = Array(DATA.length).fill(null);
+  state.judged = Array(DATA.length).fill(null);
+  state.orderMaps = Array(DATA.length).fill(null);
+}
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}
+function showBigEmoji(isCorrect){
+  const el = document.createElement("div");
+  el.className = "big-emoji";
+  el.textContent = isCorrect ? "😁🎉" : "😅💦";
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 950);
+}
+
+function render(){
+  const DATA = STAGE_DATA[state.stage] || [];
+  const t = UI[LANG];
+  if(!DATA.length){
+    document.getElementById("question").textContent = LANG==="th" ? "ด่านนี้กำลังเติมคำถาม" : "Coming soon";
+    document.getElementById("choices").innerHTML = "";
+    document.getElementById("jumper").innerHTML = "";
+    return;
+  }
+  const item = DATA[state.idx];
+  document.getElementById("progressText").textContent = t.qLabel(state.idx+1, DATA.length) + " • " + (LANG==="th" ? `ด่าน ${state.stage}` : `Stage ${state.stage}`);
+
+  document.getElementById("question").textContent = (LANG==="th") ? item.q_th : item.q_en;
+  const opts = (LANG==="th") ? item.options_th : item.options_en;
+
+  // build order map (shuffle once per question)
+  if(!state.orderMaps[state.idx]){
+    const base = opts.map((_,i)=>i);
+    shuffle(base);
+    state.orderMaps[state.idx] = base;
+  }
+  const order = state.orderMaps[state.idx];
+  const correctScreen = order.indexOf(item.a);
+
+  const choices = document.getElementById("choices");
+  choices.innerHTML = "";
+  for(let i=0;i<order.length;i++){
+    const optIndex = order[i];
+    const b = document.createElement("button");
+    b.className = "choice";
+    b.textContent = opts[optIndex];
+    if(state.picked[state.idx]===i) b.classList.add("selected");
+    if(state.judged[state.idx]===false){ b.disabled=true; 
+  try{ const DATA=STAGE_DATA[state.stage]||[]; const item=DATA[state.idx]; const order=state.orderMaps[state.idx]||[]; const chosenOpt=order[state.picked[state.idx]]; const correctOpt=item? item.a : 0; state.answers.push({idx: state.idx, chosen: chosenOpt, correct: correctOpt}); }catch(e){}
+b.classList.add("locked"); }
+    if(state.judged[state.idx]!==null){
+      if(i===correctScreen) b.classList.add("correct");
+      if(state.picked[state.idx]===i && i!==correctScreen) b.classList.add("wrong");
+    }
+    b.onclick = ()=>select(i);
+    choices.appendChild(b);
+  }
+
+  const jumper = document.getElementById("jumper");
+  jumper.innerHTML = "";
+  for(let k=0;k<DATA.length;k++){
+    const d = document.createElement("button");
+    d.className="dot";
+    d.textContent = (k+1);
+    if(k===state.idx) d.classList.add("current");
+    if(state.judged[k]===true) d.classList.add("correct");
+    else if(state.judged[k]===false) d.classList.add("wrong");
+    else if(state.picked[k]!==null) d.classList.add("done");
+    d.onclick = ()=>{ sClick(); state.idx=k; render(); };
+    jumper.appendChild(d);
+  }
+}
+
+function select(i){
+  // Lock if answered wrong before
+  if(state.judged[state.idx]===false) return;
+
+  sClick();
+  const DATA = STAGE_DATA[state.stage];
+  const item = DATA[state.idx];
+
+  const order = state.orderMaps[state.idx];
+  const correctScreen = order.indexOf(item.a);
+
+  state.picked[state.idx]=i;
+  const ok = (i===correctScreen);
+  state.judged[state.idx]=ok;
+
+  showBigEmoji(ok);
+  if(ok) sOk(); else sBad();
+  render();
+}
+function prevQ(){ sClick(); if(state.idx>0){state.idx--; render();}}
+function nextQ(){ sClick(); const DATA = STAGE_DATA[state.stage]; if(state.idx<DATA.length-1){state.idx++; render();}}
+
+function finish(){
+  sClick();
+  const DATA = STAGE_DATA[state.stage] || [];
+  let score = 0;
+  for(let i=0;i<DATA.length;i++) if(state.judged[i]===true) score++;
+  const pct = DATA.length ? Math.round(score*100/DATA.length) : 0;
+
+  // Save
+  if(state.playerName && DATA.length){
+    addAttempt(state.playerName, state.stage, score, DATA.length);
+  }
+
+  const praise = praiseByScore(score, DATA.length||1);
+  document.getElementById("playerShow").textContent = UI[LANG].playerShow(state.playerName || "-", state.stage);
+  const pt = document.getElementById("praiseText");
+  pt.textContent = praise.text;
+  pt.style.color = praise.tone;
+
+  document.getElementById("scoreBig").textContent = UI[LANG].score(score, DATA.length);
+  document.getElementById("summary").textContent = UI[LANG].percent(pct) + " • " + (LANG==="th" ? "หัวข้อ: " : "Topic: ") + UI[LANG].stageName(state.stage);
+
+  show("result");
+  renderHistoryThisStage();
+}
+
+/* =======================
+   History rendering
+======================= */
+function renderLastPlayHint(){
+  const hint = document.getElementById("lastPlayHint");
+  const name = (document.getElementById("playerNameInput").value||"").trim();
+  if(!name){ hint.style.display="none"; return; }
+  const all = loadAllHistory();
+  if(!all[name]){ hint.style.display="none"; return; }
+  const a1 = (all[name].stage1||[])[0];
+  if(a1){
+    hint.textContent = (LANG==="th")
+      ? `ล่าสุด (ด่าน 1): ${a1.score}/${a1.total} • เล่นมาแล้ว ${(all[name].stage1||[]).length} รอบ`
+      : `Last (Stage 1): ${a1.score}/${a1.total} • Attempts: ${(all[name].stage1||[]).length}`;
+    hint.style.display="block";
+  }else{
+    hint.style.display="none";
+  }
+}
+function renderStageHistory(){
+  const box = document.getElementById("stageHistoryBox");
+  const table = document.getElementById("stageHistoryTable");
+  if(!state.playerName){ box.style.display="none"; return; }
+
+  const all = loadAllHistory();
+  if(!all[state.playerName]){ box.style.display="none"; return; }
+  ensureNameRecord(all,state.playerName);
+
+  const s1 = all[state.playerName].stage1 || [];
+  const s2 = all[state.playerName].stage2 || [];
+  const s3 = all[state.playerName].stage3 || [];
+  const totalAttempts = s1.length + s2.length + s3.length;
+  if(!totalAttempts){ box.style.display="none"; return; }
+
+  box.style.display="block";
+  const t = UI[LANG];
+  const row = (arr, stageNo)=>{
+    if(!arr.length) return `<tr><td>${stageNo}</td><td>${t.stageName(stageNo)}</td><td>-</td><td>-</td><td>-</td></tr>`;
+    const best = arr.reduce((m,x)=> Math.max(m, Math.round(x.score*100/x.total)), 0);
+    const last = arr[0];
+    const lastPct = Math.round(last.score*100/last.total);
+    return `<tr>
+      <td><b>${stageNo}</b></td>
+      <td>${t.stageName(stageNo)}</td>
+      <td>${arr.length}</td>
+      <td><b>${last.score}/${last.total}</b> (${lastPct}%)</td>
+      <td>${best}%</td>
+    </tr>`;
+  };
+
+  table.innerHTML = `
+    <tr>
+      <th>${LANG==="th" ? "ด่าน" : "Stage"}</th>
+      <th>${LANG==="th" ? "หัวข้อ" : "Topic"}</th>
+      <th>${LANG==="th" ? "จำนวนรอบ" : "Attempts"}</th>
+      <th>${LANG==="th" ? "ล่าสุด" : "Last"}</th>
+      <th>${LANG==="th" ? "ดีที่สุด" : "Best"}</th>
+    </tr>
+    ${row(s1,1)}
+    ${row(s2,2)}
+    ${row(s3,3)}
+  `;
+}
+function renderHistoryThisStage(){
+  const box = document.getElementById("historyBox");
+  const table = document.getElementById("historyTable");
+  if(!state.playerName){ box.style.display="none"; return; }
+  const all = loadAllHistory();
+  if(!all[state.playerName]){ box.style.display="none"; return; }
+  ensureNameRecord(all,state.playerName);
+
+  const arr = getStageArr(all,state.playerName,state.stage) || [];
+  if(!arr.length){ box.style.display="none"; return; }
+
+  box.style.display="block";
+  table.innerHTML = `
+    <tr>
+      <th>${LANG==="th" ? "รอบ" : "No."}</th>
+      <th>${LANG==="th" ? "วันที่/เวลา" : "Date/Time"}</th>
+      <th>${LANG==="th" ? "คะแนน" : "Score"}</th>
+      <th>%</th>
+    </tr>
+  ` + arr.map((h,i)=>{
+    const pct = Math.round(h.score*100/h.total);
+    return `<tr>
+      <td>${i+1}</td>
+      <td>${h.t}</td>
+      <td><b>${h.score}/${h.total}</b></td>
+      <td>${pct}%</td>
+    </tr>`;
+  }).join("");
+}
+
+/* =======================
+   Init
+======================= */
+window.addEventListener("DOMContentLoaded", ()=>{
+  document.getElementById("playerNameInput").addEventListener("input", renderLastPlayHint);
+  document.getElementById("playerNameInput").addEventListener("keydown", (e)=>{ if(e.key==="Enter") goStageSelect(); });
+
+  applyUI();
+  setLang(LANG); // also updates buttons and re-applies UI
+  show("login");
+  renderLastPlayHint();
+});
+
+// ===== Review system (Answer Key) =====
+state.answers = []; // {idx, chosen, correct}
+function replayStage(){ sClick(); startStage(state.stage); }
+
+function showReview(){
+  show("review");
+  const t = UI[LANG];
+  document.getElementById("reviewTitle").textContent = t.reviewTitle;
+  document.getElementById("reviewSubtitle").textContent = t.reviewSubtitle;
+
+  const DATA = STAGE_DATA[state.stage] || [];
+  const list = document.getElementById("reviewList");
+  list.innerHTML = "";
+
+  (state.answers||[]).forEach((ans, i) => {
+    const item = DATA[ans.idx];
+    if(!item) return;
+    const qText = (LANG==="th") ? item.q_th : item.q_en;
+    const opts = (LANG==="th") ? item.options_th : item.options_en;
+    const your = opts[ans.chosen] ?? "-";
+    const corr = opts[ans.correct] ?? "-";
+    const ok = ans.chosen === ans.correct;
+
+    const box = document.createElement("div");
+    box.style.cssText = "padding:12px;border-radius:14px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.06);margin-bottom:10px;border:2px solid " + (ok? "#b7f1c0":"#ffd0d0");
+    box.innerHTML = `
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+        <div style="font-weight:900">Q${i+1}. ${qText}</div>
+        <div style="font-weight:900">${ok? "✅":"❌"}</div>
+      </div>
+      <div style="margin-top:8px" class="muted">${t.yourAnswer}: <b>${your}</b></div>
+      <div style="margin-top:4px" class="muted">${t.correctAnswer}: <b>${corr}</b></div>
+    `;
+    list.appendChild(box);
+  });
+}
+
+// i18n labels
+UI.th.reviewTitle = "📘 ทบทวนคำตอบ";
+UI.en.reviewTitle = "📘 Review Answers";
+UI.th.reviewSubtitle = "ดูข้อที่ตอบถูก/ผิด พร้อมเฉลยใต้แต่ละข้อ";
+UI.en.reviewSubtitle = "See right/wrong answers with the correct choices";
+UI.th.yourAnswer = "คำตอบของคุณ";
+UI.en.yourAnswer = "Your answer";
+UI.th.correctAnswer = "เฉลย";
+UI.en.correctAnswer = "Correct answer";
+
+</script>
+
+</body>
+</html>
